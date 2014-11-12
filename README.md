@@ -1,4 +1,4 @@
 WorldClock
 ==========
 
-A configurable desktop widget useful when you are collaborating across time zones.  opens and closes reliably, but shows one time zone and the label can't be changed dynamically.
+A configurable desktop widget useful when you are collaborating across time zones.  Opens and closes reliably, time zone and the label can be changed dynamically.  Minor display quirks going from time zone edit to run mode.
