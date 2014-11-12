@@ -5,7 +5,7 @@
  */
 /**
  *
- * @author Newhams
+ * @author notnewman
  */
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -19,14 +19,12 @@ public class WorldClockJFrame extends javax.swing.JFrame {
      */     
         public java.util.Timer timer;
         public Obj1 undecorate;
-        public Location myTZ;
     public WorldClockJFrame() {
-        undecorate = new Obj1();
-        initComponents();
-        myTZ = new Location();
-        undecorate.run();
-        timer = new Timer();
-        timer.schedule(new paintClock(), 500);
+            undecorate = new Obj1();
+            initComponents();
+            undecorate.run();
+            timer = new Timer();
+            timer.schedule(new paintClock(), 500);
         
     }
     class paintClock extends TimerTask {
@@ -34,19 +32,19 @@ public class WorldClockJFrame extends javax.swing.JFrame {
             Calendar thetime = Calendar.getInstance();
             TimeZone tz = TimeZone.getTimeZone("GMT");
             thetime.setTimeZone(tz);
-            thetime.add(Calendar.HOUR,0);
+            int offset = Integer.parseInt(WorldClockJFrame.this.jSpinner1.getValue().toString());
+            thetime.add(Calendar.HOUR_OF_DAY,offset);
+                int hours = (thetime.get(Calendar.HOUR_OF_DAY));
+                if (hours == 0){hours=12;}
+                if (hours > 12){hours-=12;}
+            String hh = Integer.toString(hours);
             String DayPart = " PM";
-            if (thetime.get(Calendar.AM_PM) == 0){
-            DayPart = " AM";
-            }
-            String hh = Integer.toString(thetime.get(Calendar.HOUR));
+                if (thetime.get(Calendar.AM_PM) == 0){
+                    DayPart = " AM";                 }
             String mm = Integer.toString(thetime.get(Calendar.MINUTE));
-            if (hh.length()<2){
-            hh = " "+hh;
-            }
-            if (mm.length()<2){
-            mm = "0"+mm;
-            }
+                if (hh.length()<2){hh = " "+hh;  }
+                if (mm.length()<2){mm = "0"+mm;  }
+            String os = Integer.toString(offset);
             jLabel1.setText(hh+":"+ mm + DayPart);
             timer.schedule(new resec(), 500);
        }
@@ -54,26 +52,15 @@ public class WorldClockJFrame extends javax.swing.JFrame {
     
     class resec extends TimerTask{
         public void run() {
-                timer.schedule(new paintClock(), 500);}
+            timer.schedule(new paintClock(), 500);}
         }   
     class Obj1 extends Object{
         public void run() {
-    WorldClockJFrame.this.dispose();
-    WorldClockJFrame.this.jLayeredPane1.setVisible(false);
-WorldClockJFrame.this.setUndecorated(true);
-    WorldClockJFrame.this.setVisible(true);
+            WorldClockJFrame.this.dispose();
+            WorldClockJFrame.this.jLayeredPane1.setVisible(false);
+            WorldClockJFrame.this.setUndecorated(true);
+            WorldClockJFrame.this.setVisible(true);
     }
-    }
-    class Location extends Object{
-        int offset = 0;
-        String name = "UTC";
-        public void set(int offset,String name) {
-    }
-        public int getTZ(){
-        return offset;}
-        
-        public String getTZname(){
-        return name;}
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,8 +80,10 @@ WorldClockJFrame.this.setUndecorated(true);
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(250, 120));
 
         jLayeredPane2.setName(""); // NOI18N
+        jLayeredPane2.setPreferredSize(new java.awt.Dimension(250, 121));
 
         jLabel1.setFont(new java.awt.Font("Impact", 0, 56)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -111,7 +100,11 @@ WorldClockJFrame.this.setUndecorated(true);
         jLabel2.setText("UTC");
         jLabel2.setToolTipText("");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel2.setMaximumSize(new java.awt.Dimension(100, 35));
+        jLabel2.setName("regionLabel"); // NOI18N
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 35));
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
@@ -125,7 +118,7 @@ WorldClockJFrame.this.setUndecorated(true);
             .addGroup(jLayeredPane2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -142,11 +135,21 @@ WorldClockJFrame.this.setUndecorated(true);
 
         jLayeredPane1.setLayout(new java.awt.FlowLayout());
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTextField1.setText("UTC");
+        jTextField1.setMinimumSize(new java.awt.Dimension(100, 20));
+        jTextField1.setName("newRegion"); // NOI18N
+        jTextField1.setNextFocusableComponent(jSpinner1);
+        jTextField1.setPreferredSize(new java.awt.Dimension(120, 25));
         jLayeredPane1.add(jTextField1);
+
+        jSpinner1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jSpinner1.setMinimumSize(new java.awt.Dimension(40, 20));
+        jSpinner1.setName("tzSpinner"); // NOI18N
+        jSpinner1.setPreferredSize(new java.awt.Dimension(45, 20));
         jLayeredPane1.add(jSpinner1);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("OK");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -160,7 +163,7 @@ WorldClockJFrame.this.setUndecorated(true);
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -168,11 +171,12 @@ WorldClockJFrame.this.setUndecorated(true);
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -193,13 +197,14 @@ this.setUndecorated(true);
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
 
-this.jLayeredPane2.setVisible(false);
-this.jLayeredPane1.setVisible(true);
+        this.jLayeredPane2.setVisible(false);
+        this.jLayeredPane1.setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-this.jLayeredPane1.setVisible(false);
-this.jLayeredPane2.setVisible(true);
+        WorldClockJFrame.this.jLabel2.setText(this.jTextField1.getText());
+        this.jLayeredPane1.setVisible(false);
+        this.jLayeredPane2.setVisible(true);
     }//GEN-LAST:event_jButton1MouseClicked
 
     /**
